@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  evaluation-service:
+    build: .
+    container_name: evaluation-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      - evaluation-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://evaluation-db:5432/evaluation_db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+
+  evaluation-db:
+    image: postgres:15
+    container_name: evaluation-db
+    environment:
+      POSTGRES_DB: evaluation_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5435:5432"
