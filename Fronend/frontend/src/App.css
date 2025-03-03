@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+/* Estilos personalizados para App */
+.app-container {
+  @apply flex flex-col min-h-screen;
+}
+
+.content {
+  @apply flex-grow p-6;
+}
+
+.footer {
+  @apply text-center py-4 text-sm text-gray-500;
+}
