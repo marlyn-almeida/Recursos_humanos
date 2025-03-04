@@ -1,7 +1,5 @@
 package com.oauth.demo.service;
 
-
-
 import com.oauth.demo.model.User;
 import com.oauth.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,10 @@ public class UserService {
     }
 
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
+        User user = userRepository.findByEmail(email).orElse(null);
+        System.out.println("🔍 Buscando usuario con email: " + email);
+        System.out.println("✅ Usuario encontrado: " + (user != null ? user.getEmail() : "No encontrado"));
+        return user;
     }
 
     public boolean existsByEmail(String email) {

@@ -1,32 +1,57 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState } from "react";
 
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [token, setToken] = useState(localStorage.getItem("token") || null);
 
-    // Simulación de inicio de sesión
-    const login = (userData) => {
-        setUser(userData);
-        localStorage.setItem("user", JSON.stringify(userData)); // Guardar usuario en localStorage
-    };
+    const login = async (email, password) => {
+        try {
+            const response = await fetch("http://localhost:8081/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
 
-    // Simulación de cierre de sesión
-    const logout = () => {
-        setUser(null);
-        localStorage.removeItem("user");
-    };
+            if (!response.ok) return false;
 
-    useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
+            const data = await response.json();
+            setToken(data.token);
+            localStorage.setItem("token", data.token);
+            return true;
+        } catch (error) {
+            console.error("Error en login:", error);
+            return false;
         }
-    }, []);
+    };
+
+    const register = async (email, password) => {
+        try {
+            const response = await fetch("http://localhost:8081/api/auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (!response.ok) return false;
+
+            return true;
+        } catch (error) {
+            console.error("Error en registro:", error);
+            return false;
+        }
+    };
+
+    const logout = () => {
+        setToken(null);
+        localStorage.removeItem("token");
+    };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ token, login, register, logout }}>
             {children}
         </AuthContext.Provider>
     );
 };
+
+export default AuthContext;
