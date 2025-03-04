@@ -3,26 +3,26 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 
-const Login = () => {
+const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const { login } = useAuth();
+    const { register } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const success = await login(email, password);
+        const success = await register(email, password);
         if (success) {
             navigate("/home");
         } else {
-            alert("Credenciales incorrectas");
+            alert("Error al registrar");
         }
     };
 
     return (
         <div className="flex justify-center items-center h-screen">
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md">
-                <h2 className="text-2xl mb-4">Iniciar Sesión</h2>
+                <h2 className="text-2xl mb-4">Registro</h2>
                 <input
                     type="email"
                     placeholder="Email"
@@ -37,15 +37,12 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full p-2 border rounded mb-2"
                 />
-                <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
-                    Iniciar sesión
+                <button type="submit" className="w-full bg-green-500 text-white p-2 rounded">
+                    Registrarse
                 </button>
-                <p className="mt-2 text-center">
-                    ¿No tienes cuenta? <a href="/register" className="text-blue-500">Regístrate</a>
-                </p>
             </form>
         </div>
     );
 };
 
-export default Login;
+export default Register;

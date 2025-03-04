@@ -1,17 +1,40 @@
 version: '3.8'
+
 services:
   postgres-auth:
     image: postgres:latest
     container_name: postgres-auth
+    restart: always
     environment:
-      POSTGRES_DB: auth_db
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
+      POSTGRES_DB: auth_db
     ports:
       - "5432:5432"
     networks:
-      - tarea
+      - my-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  auth-service:
+    build: .
+    container_name: auth-service
+    restart: always
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres-auth
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-auth:5432/auth_db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    networks:
+      - my-network
 
 networks:
-  tarea:
+  my-network:
     driver: bridge
+
+volumes:
+  postgres_data:
