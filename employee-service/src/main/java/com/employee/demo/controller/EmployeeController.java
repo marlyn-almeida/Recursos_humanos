@@ -1,7 +1,5 @@
 package com.employee.demo.controller;
 
-
-
 import com.employee.demo.model.Employee;
 import com.employee.demo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/employees")
+@RequestMapping("/api/employees") // Cambiado para coincidir con las peticiones
 public class EmployeeController {
 
     @Autowired

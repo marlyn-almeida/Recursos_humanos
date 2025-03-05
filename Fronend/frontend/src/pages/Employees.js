@@ -1,32 +1,63 @@
 import { useEffect, useState } from "react";
-import { getEmployees } from "../services/employeesService";
-import Navbar from "../components/Navbar";
+import { useNavigate } from "react-router-dom"; // ✅ Importar useNavigate
+import { getEmployees, deleteEmployee } from "../services/employeesService";
 import Sidebar from "../components/Sidebar";
 
 const Employees = () => {
     const [employees, setEmployees] = useState([]);
+    const navigate = useNavigate(); // ✅ Hook para navegar
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await getEmployees();
-            setEmployees(data);
+            try {
+                const data = await getEmployees();
+                setEmployees(data);
+            } catch (error) {
+                console.error("Error al cargar empleados:", error);
+            }
         };
         fetchData();
     }, []);
+
+    const handleDeleteEmployee = async (id) => {
+        try {
+            await deleteEmployee(id);
+            setEmployees(employees.filter(emp => emp.id !== id));
+        } catch (error) {
+            console.error("Error al eliminar empleado:", error);
+        }
+    };
 
     return (
         <div className="flex">
             <Sidebar />
             <div className="flex-1 p-5">
-                <Navbar />
-                <h1 className="text-2xl font-bold mb-4">Employees</h1>
-                <ul>
+                <h1 className="text-2xl font-bold mb-4">Empleados</h1>
+
+                {/* ✅ Botón que redirige a la página de agregar empleado */}
+                <button
+                    className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    onClick={() => navigate("/add-employee")} // ✅ Redirección
+                >
+                    ➕ Agregar Empleado
+                </button>
+
+                <div className="grid grid-cols-3 gap-4">
                     {employees.map((emp) => (
-                        <li key={emp.id} className="border p-3 rounded mb-2">
-                            {emp.name} - {emp.position}
-                        </li>
+                        <div key={emp.id} className="border p-5 rounded-lg shadow bg-white">
+                            <h2 className="text-lg font-bold">{emp.firstName} {emp.lastName}</h2>
+                            <p>{emp.position}</p>
+                            <p className="text-sm text-gray-500">{emp.email}</p>
+
+                            <button
+                                className="mt-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                                onClick={() => handleDeleteEmployee(emp.id)}
+                            >
+                                🗑 Eliminar
+                            </button>
+                        </div>
                     ))}
-                </ul>
+                </div>
             </div>
         </div>
     );

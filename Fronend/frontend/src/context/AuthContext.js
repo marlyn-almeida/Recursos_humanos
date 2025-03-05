@@ -1,9 +1,26 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [token, setToken] = useState(localStorage.getItem("token") || null);
+    const [token, setToken] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const savedToken = localStorage.getItem("token");
+
+        if (savedToken) {
+            // 🔹 Verificar si el token es válido antes de usarlo
+            if (savedToken.startsWith("Bearer")) {
+                setToken(savedToken);
+            } else {
+                console.warn("Token inválido, eliminando...");
+                logout(); // ⚠️ Forzar logout si el token es inválido
+            }
+        }
+
+        setLoading(false);
+    }, []);
 
     const login = async (email, password) => {
         try {
@@ -25,31 +42,14 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const register = async (email, password) => {
-        try {
-            const response = await fetch("http://localhost:8081/api/auth/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
-            });
-
-            if (!response.ok) return false;
-
-            return true;
-        } catch (error) {
-            console.error("Error en registro:", error);
-            return false;
-        }
-    };
-
     const logout = () => {
         setToken(null);
         localStorage.removeItem("token");
     };
 
     return (
-        <AuthContext.Provider value={{ token, login, register, logout }}>
-            {children}
+        <AuthContext.Provider value={{ token, login, logout, loading }}>
+            {!loading && children}
         </AuthContext.Provider>
     );
 };

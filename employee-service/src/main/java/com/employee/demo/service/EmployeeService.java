@@ -1,10 +1,10 @@
 package com.employee.demo.service;
 
-
 import com.employee.demo.model.Employee;
 import com.employee.demo.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +33,7 @@ public class EmployeeService {
             employee.setEmail(employeeDetails.getEmail());
             employee.setPosition(employeeDetails.getPosition());
             return employeeRepository.save(employee);
-        }).orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
+        }).orElseThrow(() -> new RuntimeException("Empleado no encontrado con id: " + id));
     }
 
     public void deleteEmployee(Long id) {
