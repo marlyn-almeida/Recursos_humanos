@@ -14,9 +14,7 @@ const Sidebar = () => {
                 <li className="mb-2">
                     <Link to="/evaluations" className="hover:text-gray-300">📊 Evaluations</Link>
                 </li>
-                <li className="mb-2">
-                    <Link to="/notifications" className="hover:text-gray-300">🔔 Notifications</Link>
-                </li>
+
                 <li className="mb-2">
                     <Link to="/reports" className="hover:text-gray-300">📄 Reports</Link>
                 </li>

@@ -48,3 +48,9 @@
 .footer {
   @apply text-center py-4 text-sm text-gray-500;
 }
+body {
+  background-image: url('/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}

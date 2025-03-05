@@ -1,32 +1,34 @@
 package com.demo.evaluation.controller;
 
-
-
 import com.demo.evaluation.model.Evaluation;
 import com.demo.evaluation.service.EvaluationService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/evaluations")
-@RequiredArgsConstructor
+@RequestMapping("api/evaluations")
 public class EvaluationController {
 
-    private final EvaluationService evaluationService;
+    @Autowired
+    private EvaluationService evaluationService;
 
-    @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
-    public ResponseEntity<Evaluation> createEvaluation(@RequestBody Evaluation evaluation) {
-        return ResponseEntity.ok(evaluationService.saveEvaluation(evaluation));
+    // Obtener todas las evaluaciones
+    @GetMapping
+    public List<Evaluation> getAllEvaluations() {
+        return evaluationService.getAllEvaluations();
     }
 
+    // Obtener las evaluaciones de un empleado por ID
     @GetMapping("/{employeeId}")
-    @PreAuthorize("hasAuthority('ROLE_HR') or hasAuthority('ROLE_MANAGER')")
-    public ResponseEntity<List<Evaluation>> getEvaluations(@PathVariable Long employeeId) {
-        return ResponseEntity.ok(evaluationService.getEvaluationsByEmployee(employeeId));
+    public List<Evaluation> getEvaluationsByEmployeeId(@PathVariable Long employeeId) {
+        return evaluationService.getEvaluationsByEmployeeId(employeeId);
+    }
+
+    // Registrar evaluación con score, comentarios y fecha automática
+    @PostMapping("/{employeeId}")
+    public Evaluation registerEvaluation(@PathVariable Long employeeId, @RequestBody Evaluation evaluation) {
+        return evaluationService.registerEvaluation(employeeId, evaluation.getScore(), evaluation.getComments());
     }
 }

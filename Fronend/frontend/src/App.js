@@ -5,8 +5,11 @@ import Home from "./pages/Home";
 import Employees from "./pages/Employees";
 import AddEmployee from "./pages/AddEmployee";
 import EditEmployee from "./pages/EditEmployee";
-import Attendance from "./pages/Attendance"; // ✅ Nueva página de asistencia
-import RegisterAttendance from "./pages/RegisterAttendance"; // ✅ Nueva página para registrar asistencia
+import Attendance from "./pages/Attendance"; // ✅ Página de asistencia
+import RegisterAttendance from "./pages/RegisterAttendance"; // ✅ Registrar asistencia
+import Evaluation from "./pages/Evaluations"; // ✅ Página de evaluaciones
+import AddEvaluation from "./pages/AddEvaluation"; // ✅ Agregar evaluación
+import Reports from "./pages/Reports"; // ✅ Nueva página de reportes
 import Sidebar from "./components/Sidebar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
@@ -29,8 +32,15 @@ function App() {
                     <Route path="/employees" element={<ProtectedRoute><PageWithSidebar><Employees /></PageWithSidebar></ProtectedRoute>} />
                     <Route path="/add-employee" element={<ProtectedRoute><PageWithSidebar><AddEmployee /></PageWithSidebar></ProtectedRoute>} />
                     <Route path="/edit-employee/:id" element={<ProtectedRoute><PageWithSidebar><EditEmployee /></PageWithSidebar></ProtectedRoute>} />
-                    <Route path="/attendance" element={<ProtectedRoute><PageWithSidebar><Attendance /></PageWithSidebar></ProtectedRoute>} /> {/* ✅ Nueva ruta */}
-                    <Route path="/register-attendance/:employeeId" element={<ProtectedRoute><PageWithSidebar><RegisterAttendance /></PageWithSidebar></ProtectedRoute>} /> {/* ✅ Nueva ruta */}
+                    <Route path="/attendance" element={<ProtectedRoute><PageWithSidebar><Attendance /></PageWithSidebar></ProtectedRoute>} />
+                    <Route path="/register-attendance/:employeeId" element={<ProtectedRoute><PageWithSidebar><RegisterAttendance /></PageWithSidebar></ProtectedRoute>} />
+
+                    {/* 🔹 Nuevas rutas para Evaluaciones */}
+                    <Route path="/evaluations" element={<ProtectedRoute><PageWithSidebar><Evaluation /></PageWithSidebar></ProtectedRoute>} />
+                    <Route path="/add-evaluation/:employeeId" element={<ProtectedRoute><PageWithSidebar><AddEvaluation /></PageWithSidebar></ProtectedRoute>} />
+
+                    {/* 🔹 Nueva ruta para Reportes */}
+                    <Route path="/reports" element={<ProtectedRoute><PageWithSidebar><Reports /></PageWithSidebar></ProtectedRoute>} />
 
                     {/* Redirección de rutas desconocidas */}
                     <Route path="*" element={<Navigate to="/login" />} />

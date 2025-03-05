@@ -1,24 +1,37 @@
 package com.demo.evaluation.service;
 
-
-
 import com.demo.evaluation.model.Evaluation;
 import com.demo.evaluation.repository.EvaluationRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class EvaluationService {
 
-    private final EvaluationRepository evaluationRepository;
+    @Autowired
+    private EvaluationRepository evaluationRepository;
 
-    public Evaluation saveEvaluation(Evaluation evaluation) {
-        return evaluationRepository.save(evaluation);
+    // Obtener todas las evaluaciones
+    public List<Evaluation> getAllEvaluations() {
+        return evaluationRepository.findAll();
     }
 
-    public List<Evaluation> getEvaluationsByEmployee(Long employeeId) {
+    // Obtener evaluaciones por empleado
+    public List<Evaluation> getEvaluationsByEmployeeId(Long employeeId) {
         return evaluationRepository.findByEmployeeId(employeeId);
+    }
+
+    // Registrar evaluación con fecha automática
+    public Evaluation registerEvaluation(Long employeeId, int score, String comments) {
+        Evaluation evaluation = Evaluation.builder()
+                .employeeId(employeeId)
+                .score(score)
+                .comments(comments)
+                .date(LocalDate.now()) // ✅ Fecha de hoy por defecto
+                .build();
+        return evaluationRepository.save(evaluation);
     }
 }
