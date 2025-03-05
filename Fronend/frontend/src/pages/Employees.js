@@ -20,12 +20,18 @@ const Employees = () => {
     }, []);
 
     const handleDeleteEmployee = async (id) => {
-        try {
-            await deleteEmployee(id);
-            setEmployees(employees.filter(emp => emp.id !== id));
-        } catch (error) {
-            console.error("Error al eliminar empleado:", error);
+        if (window.confirm("¿Estás seguro de eliminar este empleado?")) {
+            try {
+                await deleteEmployee(id);
+                setEmployees(employees.filter(emp => emp.id !== id));
+            } catch (error) {
+                console.error("Error al eliminar empleado:", error);
+            }
         }
+    };
+
+    const handleEditEmployee = (id) => {
+        navigate(`/edit-employee/${id}`); // ✅ Redirigir a la página de edición
     };
 
     return (
@@ -49,6 +55,15 @@ const Employees = () => {
                             <p>{emp.position}</p>
                             <p className="text-sm text-gray-500">{emp.email}</p>
 
+                            {/* ✅ Botón de Editar */}
+                            <button
+                                className="mt-2 px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 mr-2"
+                                onClick={() => handleEditEmployee(emp.id)}
+                            >
+                                ✏️ Editar
+                            </button>
+
+                            {/* ✅ Botón de Eliminar */}
                             <button
                                 className="mt-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
                                 onClick={() => handleDeleteEmployee(emp.id)}

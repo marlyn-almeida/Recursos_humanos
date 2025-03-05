@@ -4,6 +4,7 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Employees from "./pages/Employees";
 import AddEmployee from "./pages/AddEmployee";
+import EditEmployee from "./pages/EditEmployee"; // ✅ Importamos la nueva página de edición
 import Sidebar from "./components/Sidebar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
@@ -25,6 +26,7 @@ function App() {
                     <Route path="/home" element={<ProtectedRoute><PageWithSidebar><Home /></PageWithSidebar></ProtectedRoute>} />
                     <Route path="/employees" element={<ProtectedRoute><PageWithSidebar><Employees /></PageWithSidebar></ProtectedRoute>} />
                     <Route path="/add-employee" element={<ProtectedRoute><PageWithSidebar><AddEmployee /></PageWithSidebar></ProtectedRoute>} />
+                    <Route path="/edit-employee/:id" element={<ProtectedRoute><PageWithSidebar><EditEmployee /></PageWithSidebar></ProtectedRoute>} /> {/* ✅ Nueva ruta de edición */}
 
                     {/* Redirección de rutas desconocidas */}
                     <Route path="*" element={<Navigate to="/login" />} />
