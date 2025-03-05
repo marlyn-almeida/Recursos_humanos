@@ -1,10 +1,8 @@
 package com.attendance.demo.model;
 
-
-
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate; // ✅ Importación correcta
 
 @Entity
 @Table(name = "attendances")
@@ -23,8 +21,5 @@ public class Attendance {
     private Long employeeId;
 
     @Column(nullable = false)
-    private LocalDateTime checkInTime;
-
-    @Column
-    private LocalDateTime checkOutTime;
+    private LocalDate date; // 📅 Ahora sí funcionará
 }

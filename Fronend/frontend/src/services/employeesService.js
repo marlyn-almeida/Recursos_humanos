@@ -26,6 +26,26 @@ export const getEmployees = async () => {
     }
 };
 
+// 🔹 Obtener un empleado por ID (GET)
+export const getEmployeeById = async (id) => {
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": getToken()
+            },
+        });
+
+        if (!response.ok) throw new Error("Error al obtener empleado");
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error en getEmployeeById:", error);
+        throw error;
+    }
+};
+
 // Crear empleado (POST)
 export const createEmployee = async (employee) => {
     try {

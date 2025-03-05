@@ -4,7 +4,9 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Employees from "./pages/Employees";
 import AddEmployee from "./pages/AddEmployee";
-import EditEmployee from "./pages/EditEmployee"; // ✅ Importamos la nueva página de edición
+import EditEmployee from "./pages/EditEmployee";
+import Attendance from "./pages/Attendance"; // ✅ Nueva página de asistencia
+import RegisterAttendance from "./pages/RegisterAttendance"; // ✅ Nueva página para registrar asistencia
 import Sidebar from "./components/Sidebar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
@@ -26,7 +28,9 @@ function App() {
                     <Route path="/home" element={<ProtectedRoute><PageWithSidebar><Home /></PageWithSidebar></ProtectedRoute>} />
                     <Route path="/employees" element={<ProtectedRoute><PageWithSidebar><Employees /></PageWithSidebar></ProtectedRoute>} />
                     <Route path="/add-employee" element={<ProtectedRoute><PageWithSidebar><AddEmployee /></PageWithSidebar></ProtectedRoute>} />
-                    <Route path="/edit-employee/:id" element={<ProtectedRoute><PageWithSidebar><EditEmployee /></PageWithSidebar></ProtectedRoute>} /> {/* ✅ Nueva ruta de edición */}
+                    <Route path="/edit-employee/:id" element={<ProtectedRoute><PageWithSidebar><EditEmployee /></PageWithSidebar></ProtectedRoute>} />
+                    <Route path="/attendance" element={<ProtectedRoute><PageWithSidebar><Attendance /></PageWithSidebar></ProtectedRoute>} /> {/* ✅ Nueva ruta */}
+                    <Route path="/register-attendance/:employeeId" element={<ProtectedRoute><PageWithSidebar><RegisterAttendance /></PageWithSidebar></ProtectedRoute>} /> {/* ✅ Nueva ruta */}
 
                     {/* Redirección de rutas desconocidas */}
                     <Route path="*" element={<Navigate to="/login" />} />

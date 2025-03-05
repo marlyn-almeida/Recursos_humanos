@@ -1,24 +1,31 @@
-// src/services/attendanceService.js
+const API_URL = "http://localhost:8083/api/attendance";
 
-export const getAttendance = async () => {
-    try {
-        const response = await fetch("https://tu-api.com/attendance");
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Error obteniendo asistencia:", error);
-        throw error;
-    }
+const getAttendanceByEmployee = async (employeeId) => {
+    const token = localStorage.getItem("token"); // 🔹 Obtener el token almacenado
+    const response = await fetch(`${API_URL}/${employeeId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // 🔹 Enviar token en el header
+        },
+    });
+    if (!response.ok) throw new Error("Error obteniendo asistencia");
+    return response.json();
 };
 
-// También puedes exportar otras funciones aquí
-export const getAttendanceRecords = async () => {
-    try {
-        const response = await fetch("https://tu-api.com/attendance/records");
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Error obteniendo registros de asistencia:", error);
-        throw error;
-    }
+const registerAttendance = async (employeeId, date) => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/${employeeId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ date }), // 🔹 Enviar la fecha en el body
+    });
+
+    if (!response.ok) throw new Error("Error registrando asistencia");
+    return response.json();
 };
+
+export { getAttendanceByEmployee, registerAttendance };
