@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { getEmployees } from "../services/employeesService";
-import { useEvaluationsService } from "../services/evaluationsService";
+import { getEvaluationsByEmployeeId } from "../services/evaluationsService"; // ✅ Importación corregida
 import { getAttendanceByEmployee } from "../services/attendanceService";
 
 const Reports = () => {
     const [reports, setReports] = useState([]);
-    const { getEvaluationsByEmployeeId } = useEvaluationsService(); // Usamos el hook para obtener evaluaciones
 
     useEffect(() => {
         const fetchReports = async () => {
@@ -14,7 +13,7 @@ const Reports = () => {
 
                 const reportsData = await Promise.all(
                     employees.map(async (employee) => {
-                        const evaluations = await getEvaluationsByEmployeeId(employee.id);
+                        const evaluations = await getEvaluationsByEmployeeId(employee.id); // ✅ Uso directo
                         const attendance = await getAttendanceByEmployee(employee.id);
 
                         const averageScore = evaluations.length > 0

@@ -49,8 +49,16 @@
   @apply text-center py-4 text-sm text-gray-500;
 }
 body {
-  background-image: url('/background.jpg');
+  background-image: url('../public/background.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos globales */
+body {
+  @apply bg-gray-100 text-gray-900;
 }
