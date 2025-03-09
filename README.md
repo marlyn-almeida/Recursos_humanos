@@ -1,6 +1,5 @@
-Claro, aquí tienes todo el contenido que me proporcionaste convertido a Markdown en un solo documento:
 
-```markdown
+
 # Gestión de Recursos Humanos - Frontend
 
 Este es el frontend de la aplicación de gestión de recursos humanos, desarrollado en **React** con **Tailwind CSS** para el diseño y varias bibliotecas para manejar la comunicación con la API y la generación de reportes en PDF.
