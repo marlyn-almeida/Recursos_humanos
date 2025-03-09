@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build: .  # Construye la imagen desde el Dockerfile en el directorio actual
+    container_name: api-gateway
+    ports:
+      - "8080:8080"  # Puerto donde tu API Gateway estará expuesto
+    networks:
+      - my-network
+    depends_on:
+      - auth-service
+      - employee-service
+      - attendance-service
+      - evaluation-service
+
+  auth-service:
+    image: <auth-service-image>
+    container_name: auth-service
+    networks:
+      - my-network
+
+  employee-service:
+    image: <employee-service-image>
+    container_name: employee-service
+    networks:
+      - my-network
+
+  attendance-service:
+    image: <attendance-service-image>
+    container_name: attendance-service
+    networks:
+      - my-network
+
+  evaluation-service:
+    image: <evaluation-service-image>
+    container_name: evaluation-service
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge

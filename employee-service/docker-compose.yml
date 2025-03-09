@@ -1,49 +1,41 @@
 version: '3.8'
 
 services:
-  postgres-db:
+  postgres-auth:
     image: postgres:latest
-    container_name: postgres-db
+    container_name: postgres-auth
     restart: always
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
+      POSTGRES_DB: employee_db  # La base de datos de empleados
     ports:
-      - "5432:5432"
+      - "5432:5432"  # Centralizamos en un solo PostgreSQL
     networks:
       - my-network
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  auth-service:
-    build: ./auth-service
-    container_name: auth-service
-    restart: always
-    ports:
-      - "8081:8081"
-    depends_on:
-      - postgres-db
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/auth_db
-      SPRING_DATASOURCE_USERNAME: admin
-      SPRING_DATASOURCE_PASSWORD: admin
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-    networks:
-      - my-network
+      - postgres_auth_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "admin", "-d", "employee_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   employee-service:
-    build: ./employee-service
+    build: .  # Asegúrate de que el Dockerfile está en la raíz
     container_name: employee-service
     restart: always
     ports:
       - "8082:8082"
     depends_on:
-      - postgres-db
+      postgres-auth:
+        condition: service_healthy  # Asegura que PostgreSQL esté listo
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/employee_db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-auth:5432/employee_db
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_PROFILES_ACTIVE: docker
     networks:
       - my-network
 
@@ -52,4 +44,4 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_data:
+  postgres_auth_data:
