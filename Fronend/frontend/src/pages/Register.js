@@ -1,27 +1,24 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../hooks/useAuth"; // Asegúrate de que el hook esté importado correctamente
 
 const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
-    const { register } = useAuth();
+    const { register } = useAuth(); // Obtener la función de registro desde useAuth
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null); // Limpiar errores anteriores
 
-        try {
-            const success = await register(email, password);
-            if (success) {
-                navigate("/home");
-            } else {
-                setError("Error al registrar. Intenta con otro email.");
-            }
-        } catch (err) {
-            setError("Hubo un problema con el registro.");
+        // Intentamos registrar al usuario
+        const success = await register(email, password); // Usamos la función register aquí
+        if (success) {
+            navigate("/home"); // Redirigir a Home si el registro fue exitoso
+        } else {
+            setError("Error al registrar. Intenta con otro email."); // Mostrar mensaje de error si el registro falla
         }
     };
 

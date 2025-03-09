@@ -1,3 +1,4 @@
+// AuthContext.js
 import { createContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
@@ -10,12 +11,12 @@ export const AuthProvider = ({ children }) => {
         const savedToken = localStorage.getItem("token");
 
         if (savedToken) {
-            // 🔹 Verificar si el token es válido antes de usarlo
+            // Verificar si el token es válido
             if (savedToken.startsWith("Bearer")) {
                 setToken(savedToken);
             } else {
                 console.warn("Token inválido, eliminando...");
-                logout(); // ⚠️ Forzar logout si el token es inválido
+                logout(); // Forzar logout si el token es inválido
             }
         }
 
@@ -42,13 +43,32 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const register = async (email, password) => {
+        try {
+            const response = await fetch("http://localhost:8081/api/auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }), // Aquí estamos enviando el correo y la contraseña
+            });
+
+            if (!response.ok) {
+                return false; // Si la respuesta no es exitosa, regresamos false
+            }
+
+            return true; // Si todo va bien, retornamos true
+        } catch (error) {
+            console.error("Error en registro:", error);
+            return false;
+        }
+    };
+
     const logout = () => {
         setToken(null);
         localStorage.removeItem("token");
     };
 
     return (
-        <AuthContext.Provider value={{ token, login, logout, loading }}>
+        <AuthContext.Provider value={{ token, login, register, logout, loading }}>
             {!loading && children}
         </AuthContext.Provider>
     );
