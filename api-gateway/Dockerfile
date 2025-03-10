@@ -1,14 +1,14 @@
-# Usa una imagen base de Java
-FROM openjdk:17-jdk-slim
+# Usa una imagen base de OpenJDK
+FROM openjdk:11-jre-slim
 
-# Establece el directorio de trabajo dentro del contenedor
+# Configura el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copia el archivo JAR desde el host al contenedor
-COPY target/gateway-service.jar /app/gateway-service.jar
+# Copia el archivo JAR de la aplicación (asegúrate de que el JAR se genere correctamente al compilar tu aplicacion)
+COPY target/api-gateway-0.0.1-SNAPSHOT.jar app.jar
 
-# Expone el puerto que usará tu aplicación
+# Expone el puerto que el API Gateway usara
 EXPOSE 8080
 
-# Comando para ejecutar la aplicación Spring Boot
-ENTRYPOINT ["java", "-jar", "gateway-service.jar"]
+# Configura el comando de inicio de la aplicacion
+ENTRYPOINT ["java", "-jar", "app.jar"]

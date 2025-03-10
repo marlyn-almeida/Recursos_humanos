@@ -1,43 +1,56 @@
 version: '3.8'
 
 services:
+  # API Gateway
   api-gateway:
-    build: .  # Construye la imagen desde el Dockerfile en el directorio actual
+    image: lynmoon/my-api-gateway:latest
     container_name: api-gateway
     ports:
-      - "8080:8080"  # Puerto donde tu API Gateway estará expuesto
+      - "8080:8080"
     networks:
-      - my-network
+      - api-network
     depends_on:
       - auth-service
       - employee-service
       - attendance-service
       - evaluation-service
 
+  # Servicio de autenticación
   auth-service:
-    image: <auth-service-image>
+    image: lynmoon/auth-service:latest
     container_name: auth-service
+    ports:
+      - "8081:8080"
     networks:
-      - my-network
+      - api-network
 
+  # Servicio de empleados
   employee-service:
-    image: <employee-service-image>
+    image: lynmoon/employee-service:latest
     container_name: employee-service
+    ports:
+      - "8082:8080"
     networks:
-      - my-network
+      - api-network
 
+  # Servicio de asistencia
   attendance-service:
-    image: <attendance-service-image>
+    image: lynmoon/attendance-service:latest
     container_name: attendance-service
+    ports:
+      - "8083:8080"
     networks:
-      - my-network
+      - api-network
 
+  # Servicio de evaluaciones
   evaluation-service:
-    image: <evaluation-service-image>
+    image: lynmoon/evaluation-service:latest
     container_name: evaluation-service
+    ports:
+      - "8084:8080"
     networks:
-      - my-network
+      - api-network
 
 networks:
-  my-network:
+  api-network:
     driver: bridge

@@ -43,8 +43,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Reemplaza con la URL de tu API Gateway o tu dominio en Azure
-        configuration.setAllowedOrigins(List.of("https://mi-api-gateway.azurewebsites.net"));
+        configuration.setAllowedOrigins(List.of("http://172.190.36.62")); // Cambia esto por la IP de la VM
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true); // Permitir credenciales en CORS

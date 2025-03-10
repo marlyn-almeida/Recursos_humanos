@@ -1,4 +1,5 @@
-const API_URL = "http://localhost:8083/api/attendance";
+// AttendanceService.js
+const API_URL = "http://172.190.36.62:8080/attendance";  // URL del API Gateway en la máquina virtual
 
 const getAttendanceByEmployee = async (employeeId) => {
     const token = localStorage.getItem("token"); // 🔹 Obtener el token almacenado
@@ -6,7 +7,7 @@ const getAttendanceByEmployee = async (employeeId) => {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // 🔹 Enviar token en el header
+            Authorization: `Bearer ${token}`,  // Añadido el "Bearer" antes del token
         },
     });
     if (!response.ok) throw new Error("Error obteniendo asistencia");
@@ -19,7 +20,7 @@ const registerAttendance = async (employeeId, date) => {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,  // Añadido el "Bearer" antes del token
         },
         body: JSON.stringify({ date }), // 🔹 Enviar la fecha en el body
     });

@@ -1,4 +1,5 @@
-const API_URL = "http://localhost:8082/api/employees";
+// EmployeesService.js
+const API_URL = "http://172.190.36.62:8080/employees"; // URL del API Gateway en la máquina virtual
 
 // Función para obtener el token correctamente
 const getToken = () => {
@@ -26,7 +27,7 @@ export const getEmployees = async () => {
     }
 };
 
-// 🔹 Obtener un empleado por ID (GET)
+// Obtener un empleado por ID (GET)
 export const getEmployeeById = async (id) => {
     try {
         const response = await fetch(`${API_URL}/${id}`, {

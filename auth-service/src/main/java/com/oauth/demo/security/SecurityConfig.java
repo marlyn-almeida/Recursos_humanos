@@ -49,8 +49,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Reemplaza esta URL con la URL de tu frontend o API Gateway en Azure
-        configuration.setAllowedOrigins(List.of("https://mi-api-gateway.azurewebsites.net")); // Cambia esto por la URL del API Gateway o frontend
+        configuration.setAllowedOrigins(List.of("http://172.190.36.62")); // Cambia esto por la IP de la VM
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos HTTP permitidos
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Encabezados permitidos (Authorization es esencial para JWT)
         configuration.setAllowCredentials(true); // Permitir credenciales (como cookies o autenticación de sesión)

@@ -1,4 +1,5 @@
-const API_URL = "http://localhost:8084/api/evaluations";
+// EvaluationsService.js
+const API_URL = "http://172.190.36.62:8080/api/evaluations";  // URL del API Gateway en la máquina virtual
 
 // Obtener todas las evaluaciones
 const getEvaluations = async () => {
@@ -7,7 +8,7 @@ const getEvaluations = async () => {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,  // Se mantiene el Bearer
         },
     });
 
@@ -18,11 +19,11 @@ const getEvaluations = async () => {
 // Obtener evaluaciones por ID de empleado
 const getEvaluationsByEmployeeId = async (employeeId) => {
     const token = localStorage.getItem("token");
-    const response = await fetch(`${API_URL}/${employeeId}`, { // 🔹 Se corrige la URL
+    const response = await fetch(`${API_URL}/${employeeId}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,  // Se mantiene el Bearer
         },
     });
 
@@ -35,15 +36,15 @@ const addEvaluation = async (evaluation) => {
     const { employeeId, rating, comment } = evaluation;
     const token = localStorage.getItem("token");
 
-    const response = await fetch(`${API_URL}/${employeeId}`, { // 🔹 Agrega employeeId en la URL
+    const response = await fetch(`${API_URL}/${employeeId}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,  // Se mantiene el Bearer
         },
         body: JSON.stringify({
-            score: rating, // 🔹 Cambié 'rating' por 'score' para coincidir con el backend
-            comments: comment, // 🔹 'comment' debe coincidir con 'comments'
+            score: rating, // 'rating' ahora es 'score' para coincidir con el backend
+            comments: comment, // 'comment' ahora es 'comments' según el backend
         }),
     });
 
@@ -52,5 +53,3 @@ const addEvaluation = async (evaluation) => {
 };
 
 export { getEvaluations, getEvaluationsByEmployeeId, addEvaluation };
-
-

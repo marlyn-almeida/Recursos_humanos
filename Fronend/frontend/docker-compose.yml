@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # Servicio de autenticación
+  auth-service:
+    image: lynmoon/auth-service:v2  # Imagen v2 de Docker Hub
+    container_name: auth-service
+    ports:
+      - "8081:8080"
+    networks:
+      - api-network
+    environment:
+      - API_URL=http://172.190.36.62:8081  # URL del servicio de autenticación
+
+  # Servicio de empleados
+  employee-service:
+    image: lynmoon/employee-service:v2  # Imagen v2 de Docker Hub
+    container_name: employee-service
+    ports:
+      - "8082:8080"
+    networks:
+      - api-network
+    environment:
+      - API_URL=http://172.190.36.62:8082  # URL del servicio de empleados
+
+  # Servicio de asistencia
+  attendance-service:
+    image: lynmoon/attendance-service:v2  # Imagen v2 de Docker Hub
+    container_name: attendance-service
+    ports:
+      - "8083:8080"
+    networks:
+      - api-network
+    environment:
+      - API_URL=http://172.190.36.62:8083  # URL del servicio de asistencia
+
+  # Servicio de evaluaciones
+  evaluation-service:
+    image: lynmoon/evaluation-service:v2  # Imagen v2 de Docker Hub
+    container_name: evaluation-service
+    ports:
+      - "8084:8080"
+    networks:
+      - api-network
+    environment:
+      - API_URL=http://172.190.36.62:8084  # URL del servicio de evaluaciones
+
+  # API Gateway
+  api-gateway:
+    image: lynmoon/myapigatewayservice:v2  # Imagen v2 de Docker Hub (actualizado)
+    container_name: api-gateway
+    ports:
+      - "8080:8080"  # Mapea el puerto del API Gateway
+    networks:
+      - api-network
+    depends_on:
+      - auth-service
+      - employee-service
+      - attendance-service
+      - evaluation-service
+    environment:
+      - API_GATEWAY_URL=http://172.190.36.62:8080  # URL del API Gateway
+
+  # Frontend
+  frontend:
+    build: ./frontend  # Directorio donde se encuentra el Dockerfile de tu Frontend
+    container_name: frontend
+    ports:
+      - "80:80"  # Mapea el puerto 80 del frontend al puerto 80 de tu máquina
+    networks:
+      - api-network
+    depends_on:
+      - api-gateway  # Asegura que el API Gateway esté disponible antes de iniciar el frontend
+
+networks:
+  api-network:
+    driver: bridge

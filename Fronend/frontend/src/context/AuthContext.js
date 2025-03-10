@@ -11,13 +11,7 @@ export const AuthProvider = ({ children }) => {
         const savedToken = localStorage.getItem("token");
 
         if (savedToken) {
-            // Verificar si el token es válido
-            if (savedToken.startsWith("Bearer")) {
-                setToken(savedToken);
-            } else {
-                console.warn("Token inválido, eliminando...");
-                logout(); // Forzar logout si el token es inválido
-            }
+            setToken(savedToken);
         }
 
         setLoading(false);
@@ -25,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const response = await fetch("http://localhost:8081/api/auth/login", {
+            const response = await fetch("http://172.190.36.62:8080/api/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
@@ -45,17 +39,17 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (email, password) => {
         try {
-            const response = await fetch("http://localhost:8081/api/auth/register", {
+            const response = await fetch("http://172.190.36.62:8080/api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }), // Aquí estamos enviando el correo y la contraseña
+                body: JSON.stringify({ email, password }),
             });
 
             if (!response.ok) {
-                return false; // Si la respuesta no es exitosa, regresamos false
+                return false;
             }
 
-            return true; // Si todo va bien, retornamos true
+            return true;
         } catch (error) {
             console.error("Error en registro:", error);
             return false;
