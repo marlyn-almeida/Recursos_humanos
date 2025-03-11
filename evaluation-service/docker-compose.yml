@@ -1,20 +1,21 @@
 version: '3.8'
 
 services:
-  postgres-auth:
+  postgres-evaluation:
     image: postgres:latest
     container_name: postgres-auth
     restart: always
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: evaluation_db  # La base de datos de evaluacion
+      POSTGRES_DB: evaluation_db
     ports:
-      - "5432:5432"
+      - "5435:5432"  # Exponer el puerto 5435 para acceder desde fuera
     networks:
       - my-network
     volumes:
-      - postgres_auth_data:/var/lib/postgresql/data
+      - postgres_evaluation_data:/var/lib/postgresql/data
+      - ./initdb.sql:/docker-entrypoint-initdb.d/initdb.sql  # Montar el archivo initdb.sql para inicializar la base de datos
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "admin"]
       interval: 10s
@@ -28,10 +29,10 @@ services:
     ports:
       - "8084:8084"
     depends_on:
-      postgres-auth:
+      postgres-evaluation:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-auth:5432/evaluation_db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-auth:5432/evaluation_db  # Usamos el nombre del servicio del contenedor
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
@@ -44,4 +45,4 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_auth_data:
+  postgres_evaluation_data:

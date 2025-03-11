@@ -1,20 +1,21 @@
 version: '3.8'
 
 services:
-  postgres-auth:
+  postgres-employee:
     image: postgres:latest
-    container_name: postgres-auth
+    container_name: postgres-employee
     restart: always
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: employee_db  # La base de datos de empleados
+      POSTGRES_DB: employee_db  # Base de datos de empleados
     ports:
-      - "5432:5432"  # Centralizamos en un solo PostgreSQL
+      - "5433:5432"  # Exponer el puerto 5433 para acceder desde fuera
     networks:
       - my-network
     volumes:
-      - postgres_auth_data:/var/lib/postgresql/data
+      - postgres_employee_data:/var/lib/postgresql/data
+      - ./initdb.sql:/docker-entrypoint-initdb.d/initdb.sql  # Montar el archivo initdb.sql para inicializar la base de datos
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "admin", "-d", "employee_db"]
       interval: 10s
@@ -22,14 +23,14 @@ services:
       retries: 5
 
   employee-service:
-    build: .  # Asegúrate de que el Dockerfile está en la raíz
+    image: lynmoon/employee-service:latest  # Reemplaza con la imagen de tu servicio
     container_name: employee-service
     restart: always
     ports:
       - "8082:8082"
     depends_on:
-      postgres-auth:
-        condition: service_healthy  # Asegura que PostgreSQL esté listo
+      postgres-employee:
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-auth:5432/employee_db
       SPRING_DATASOURCE_USERNAME: admin
@@ -44,4 +45,4 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_auth_data:
+  postgres_employee_data:  # Volumen para persistencia de la base de datos

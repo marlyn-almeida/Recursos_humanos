@@ -10,11 +10,12 @@ services:
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: auth_db
     ports:
-      - "5432:5432"  # Ahora es el mismo para todos
+      - "5432:5432"  # Exponer el puerto 5432 para acceder desde fuera
     networks:
       - my-network
     volumes:
       - postgres_auth_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Montar el archivo init.sql para inicializar la base de datos
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "admin"]
       interval: 10s

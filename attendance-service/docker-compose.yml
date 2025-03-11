@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  postgres-auth:  # Cambié el nombre del servicio para que coincida con la base de datos
+  postgres-auth:  # Servicio de PostgreSQL para attendance
     image: postgres:latest
     container_name: postgres-auth
     restart: always
@@ -15,6 +15,7 @@ services:
       - my-network  # Red compartida
     volumes:
       - postgres_auth_data:/var/lib/postgresql/data
+      - ./initdb.sql:/docker-entrypoint-initdb.d/initdb.sql  # Montamos el archivo initdb.sql para crear la base de datos
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "admin"]
       interval: 10s
@@ -31,7 +32,7 @@ services:
       postgres-auth:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-auth:5432/attendance_db  # Cambié esto para que apunte a postgres-auth
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-auth:5432/attendance_db  # URL actualizada para apuntar al contenedor postgres-auth
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
