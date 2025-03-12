@@ -1,9 +1,9 @@
 // AttendanceService.js
 const API_URL = "/api/attendance";  // URL del API Gateway en la máquina virtual
-const API_URL_PORT  = "http://172.190.36.62:8083/api/atendence";
+const API_URL_PORT  = "http://172.190.36.62:8083/api/attendance";
 const getAttendanceByEmployee = async (employeeId) => {
     const token = localStorage.getItem("token"); // 🔹 Obtener el token almacenado
-    const response = await fetch(`${API_URL}/${employeeId}`, {
+    const response = await fetch(`${API_URL_PORT}/${employeeId}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -16,7 +16,7 @@ const getAttendanceByEmployee = async (employeeId) => {
 
 const registerAttendance = async (employeeId, date) => {
     const token = localStorage.getItem("token");
-    const response = await fetch(`${API_URL}/${employeeId}`, {
+    const response = await fetch(`${API_URL_PORT}/${employeeId}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

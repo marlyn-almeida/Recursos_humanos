@@ -1,6 +1,6 @@
 // EvaluationsService.js
 const API_URL = "/api/evaluations";  // URL del API Gateway en la máquina virtual
-const API_URL_PORT  = "http://172.190.36.62:8084//api/evaluations";
+const API_URL_PORT  = "http://172.190.36.62:8084/api/evaluations";
 // Obtener todas las evaluaciones
 const getEvaluations = async () => {
     const token = localStorage.getItem("token");
@@ -19,7 +19,7 @@ const getEvaluations = async () => {
 // Obtener evaluaciones por ID de empleado
 const getEvaluationsByEmployeeId = async (employeeId) => {
     const token = localStorage.getItem("token");
-    const response = await fetch(`${API_URL}/${employeeId}`, {
+    const response = await fetch(`${API_URL_PORT}/${employeeId}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -36,7 +36,7 @@ const addEvaluation = async (evaluation) => {
     const { employeeId, rating, comment } = evaluation;
     const token = localStorage.getItem("token");
 
-    const response = await fetch(`${API_URL}/${employeeId}`, {
+    const response = await fetch(`${API_URL_PORT}/${employeeId}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
