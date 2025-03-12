@@ -1,51 +1,57 @@
 version: '3.8'
 
 services:
+  nginx:  # ¡SERVICIO PARA NGINX!
+    build: ./nginx  # Directorio donde está el Dockerfile de Nginx
+    ports:
+      - "80:80"  # Expone el puerto 80 de Nginx
+    depends_on:
+      - gateway  # Nginx depende del gateway
+    networks:
+      - my-network
+
   gateway:
     build: ./gateway
     image: lynmoon/gateway:latest
-    ports:
-      - "8080:8080"
+    # ports:  <-- ¡NO expongas el puerto del gateway si usas Nginx!
+    #   - "8080:8080"
     restart: always
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
-      - my-network  # Conecta el gateway a la red
+      - my-network
 
   auth-service:
     build: ./auth-service
     image: lynmoon/auth-service:latest
     restart: always
-    depends_on:  #  auth-service depende de postgres-db
+    depends_on:
       postgres-db:
         condition: service_healthy
     environment:
-      # Usa el nombre del servicio de la base de datos como host:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/auth_db
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update  # O la configuración que necesites
-      SPRING_PROFILES_ACTIVE: docker #Ejemplo,remueve si no tienes este profile
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_PROFILES_ACTIVE: docker
     networks:
-      - my-network  # Conecta auth-service a la red
+      - my-network
 
   employees-service:
     build: ./employees-service
     image: lynmoon/employees-service:latest
     restart: always
-    depends_on:  #  employees-service depende de postgres-db
+    depends_on:
       postgres-db:
         condition: service_healthy
     environment:
-      # Usa el nombre del servicio de la base de datos como host:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/employees_db
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_PROFILES_ACTIVE: docker
     networks:
-      - my-network  # Conecta employees-service a la red
-
+      - my-network
   attendance-service:
     build: ./attendance-service
     image: lynmoon/attendance-service:latest
@@ -80,32 +86,30 @@ services:
     networks:
       - my-network
 
-  # Base de datos PostgreSQL (una sola instancia para todos los microservicios)
+  # Base de datos PostgreSQL
   postgres-db:
-    image: postgres:latest  # Puedes usar una versión específica (ej: postgres:14)
+    image: postgres:latest
     restart: always
     environment:
-      POSTGRES_USER: admin  # Cambia por un usuario/contraseña seguros
+      POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: main_db   #  Base de datos principal (o puedes usar bases de datos separadas)
-      #POSTGRES_MULTIPLE_DATABASES: auth_db,employees_db,attendance_db,evaluation_db # Si quieres usar bases separadas
+      POSTGRES_DB: main_db  #  Usa una sola base de datos para todos, o multiples servicios
+      #POSTGRES_MULTIPLE_DATABASES: auth_db,employees_db,attendance_db,evaluation_db #Si quieres usar bases separadas.
     #ports:
-    #  - "5432:5432"  # Descomenta SOLO si necesitas acceder a la BD desde fuera de Docker
+    #  - "5432:5432"  # SOLO si necesitas acceder a la BD desde fuera de Docker
     volumes:
-      - postgres_data:/var/lib/postgresql/data  # Persistencia de datos
+      - postgres_data:/var/lib/postgresql/data
     networks:
-      - my-network  # Conecta la base de datos a la red
+      - my-network
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "admin"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-# Define la red
 networks:
   my-network:
-    driver: bridge  # Usa el driver bridge (el predeterminado)
+    driver: bridge
 
-# Define el volumen
 volumes:
   postgres_data:

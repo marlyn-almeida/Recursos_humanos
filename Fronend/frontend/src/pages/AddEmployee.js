@@ -25,7 +25,7 @@ const AddEmployee = () => {
             console.log("Enviando datos:", employee); // 🔹 Depuración
             await createEmployee(employee);
             alert("Empleado agregado correctamente!"); // ✅ Confirmación visual
-            navigate("/employees");
+            //navigate("/employees");
         } catch (error) {
             console.error("Error al agregar empleado:", error);
             alert("Hubo un error al guardar el empleado.");

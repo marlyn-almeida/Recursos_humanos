@@ -1,6 +1,6 @@
 // EmployeesService.js
-const API_URL = "http://172.190.36.62/api/employees"; // URL del API Gateway en la máquina virtual
-
+const API_URL = "/api/employees"; // URL del API Gateway en la maquina virtual
+const API_URL_PORT  = "http://172.190.36.62:8082/api/employees";
 // Función para obtener el token correctamente
 const getToken = () => {
     const token = localStorage.getItem("token");
@@ -30,7 +30,7 @@ export const getEmployees = async () => {
 // Obtener un empleado por ID (GET)
 export const getEmployeeById = async (id) => {
     try {
-        const response = await fetch(`${API_URL}/${id}`, {
+        const response = await fetch(API_URL_PORT+"/"+id, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -50,7 +50,7 @@ export const getEmployeeById = async (id) => {
 // Crear empleado (POST)
 export const createEmployee = async (employee) => {
     try {
-        const response = await fetch(API_URL, {
+        const response = await fetch(API_URL_PORT, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -58,7 +58,7 @@ export const createEmployee = async (employee) => {
             },
             body: JSON.stringify(employee),
         });
-
+            console.log(response,JSON.stringify(employee));
         if (!response.ok) {
             const errorText = await response.text();
             throw new Error(`Error en POST: ${errorText}`);
@@ -74,7 +74,8 @@ export const createEmployee = async (employee) => {
 // Actualizar empleado (PUT)
 export const updateEmployee = async (id, updatedEmployee) => {
     try {
-        const response = await fetch(`${API_URL}/${id}`, {
+
+        const response = await fetch(API_URL_PORT+"/"+id, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -98,7 +99,7 @@ export const updateEmployee = async (id, updatedEmployee) => {
 // Eliminar empleado (DELETE)
 export const deleteEmployee = async (id) => {
     try {
-        const response = await fetch(`${API_URL}/${id}`, {
+        const response = await fetch(API_URL_PORT+"/"+id, {
             method: "DELETE",
             headers: {
                 "Authorization": getToken()
