@@ -1,29 +1,17 @@
-# Etapa 1: Construcción del frontend
-FROM node:16-slim as build
-
-# Directorio de trabajo en el contenedor
-WORKDIR /app
-
-# Copiamos los archivos de configuración y dependencias de tu proyecto frontend
-COPY package.json package-lock.json /app/
-
-# Instalamos las dependencias y jspdf-autotable
-RUN npm install && npm install jspdf-autotable
-
-# Copiamos el código fuente del frontend
-COPY . /app/
-
-# Construimos el proyecto para producción
-RUN npm run build
-
-# Etapa 2: Servir el contenido con Nginx
+# Usar una imagen base de Nginx
 FROM nginx:alpine
 
-# Copiamos el build generado por React al contenedor de Nginx
-COPY --from=build /app/build /usr/share/nginx/html
+# Eliminar la configuración por defecto de Nginx
+RUN rm -rf /usr/share/nginx/html/*
 
-# Exponemos el puerto 80 para servir la aplicación
+# Copiar los archivos del build de React al directorio adecuado de Nginx
+COPY ./build /usr/share/nginx/html
+
+# Copiar la configuración personalizada de Nginx
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+
+# Exponer el puerto 80
 EXPOSE 80
 
-# Iniciamos Nginx para servir el contenido
+# Ejecutar Nginx en modo primer plano
 CMD ["nginx", "-g", "daemon off;"]

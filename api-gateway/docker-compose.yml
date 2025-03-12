@@ -1,56 +1,54 @@
 version: '3.8'
 
 services:
-  # API Gateway
-  api-gateway:
-    image: lynmoon/my-api-gateway:latest
-    container_name: api-gateway
+  gateway:
+    build: ./gateway
+    image: lynmoon/gateway:latest  # Usando tu usuario
     ports:
       - "8080:8080"
-    networks:
-      - api-network
-    depends_on:
-      - auth-service
-      - employee-service
-      - attendance-service
-      - evaluation-service
+    restart: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
 
-  # Servicio de autenticación
   auth-service:
-    image: lynmoon/auth-service:latest
-    container_name: auth-service
-    ports:
-      - "8081:8080"
-    networks:
-      - api-network
+    build: ./auth-service
+    image: lynmoon/auth-service:latest # Usando tu usuario
+    # ports:
+    #   - "8081:8081"
+    restart: always
+    # environment:
+    #   - SPRING_DATASOURCE_URL=...
+    #   - SPRING_DATASOURCE_USERNAME=...
+    #   - SPRING_DATASOURCE_PASSWORD=...
 
-  # Servicio de empleados
-  employee-service:
-    image: lynmoon/employee-service:latest
-    container_name: employee-service
-    ports:
-      - "8082:8080"
-    networks:
-      - api-network
+  employees-service:
+    build: ./employees-service
+    image: lynmoon/employees-service:latest # Usando tu usuario
+    restart: always
 
-  # Servicio de asistencia
   attendance-service:
-    image: lynmoon/attendance-service:latest
-    container_name: attendance-service
-    ports:
-      - "8083:8080"
-    networks:
-      - api-network
+    build: ./attendance-service
+    image:  lynmoon/attendance-service:latest
+    restart: always
 
-  # Servicio de evaluaciones
   evaluation-service:
+    build: ./evaluation-service
     image: lynmoon/evaluation-service:latest
-    container_name: evaluation-service
-    ports:
-      - "8084:8080"
-    networks:
-      - api-network
+    restart: always
 
-networks:
-  api-network:
-    driver: bridge
+  # ... agrega los otros microservicios ...
+
+  # (Opcional) Si usas PostgreSQL:
+  postgres-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: employees_db  # o el nombre de tu base de datos
+    ports:
+      - "5432:5432"  # SOLO si necesitas acceso directo desde fuera de Docker
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

@@ -1,5 +1,5 @@
 // AttendanceService.js
-const API_URL = "http://172.190.36.62:8080/attendance";  // URL del API Gateway en la máquina virtual
+const API_URL = "/api/attendance";  // URL del API Gateway en la máquina virtual
 
 const getAttendanceByEmployee = async (employeeId) => {
     const token = localStorage.getItem("token"); // 🔹 Obtener el token almacenado

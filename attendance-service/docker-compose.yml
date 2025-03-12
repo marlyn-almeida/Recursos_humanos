@@ -1,29 +1,24 @@
 version: '3.8'
 
 services:
-  postgres-auth:  # Servicio de PostgreSQL para attendance
+  postgres-auth:
     image: postgres:latest
     container_name: postgres-auth
     restart: always
     environment:
-      POSTGRES_DB: attendance_db  # La base de datos en el contenedor
+      POSTGRES_DB: attendance_db
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
     ports:
-      - "5434:5432"  # Exponemos el puerto 5434 para acceder desde fuera
+      - "5434:5432"
     networks:
-      - my-network  # Red compartida
+      - my-network
     volumes:
       - postgres_auth_data:/var/lib/postgresql/data
-      - ./initdb.sql:/docker-entrypoint-initdb.d/initdb.sql  # Montamos el archivo initdb.sql para crear la base de datos
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "admin"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+
 
   attendance-service:
-    build: .
+    image: lynmoon/attendance-service:latest  # Usar imagen de Docker Hub
     container_name: attendance-service
     restart: always
     ports:
@@ -32,17 +27,17 @@ services:
       postgres-auth:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-auth:5432/attendance_db  # URL actualizada para apuntar al contenedor postgres-auth
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-auth:5432/attendance_db
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_PROFILES_ACTIVE: docker
     networks:
-      - my-network  # Red compartida
+      - my-network
 
 networks:
-  my-network:  # Red compartida para todos los microservicios
+  my-network:
     driver: bridge
 
 volumes:
-  postgres_auth_data:  # Volumen para la persistencia de la base de datos
+  postgres_auth_data:

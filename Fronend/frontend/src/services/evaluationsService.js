@@ -1,5 +1,5 @@
 // EvaluationsService.js
-const API_URL = "http://172.190.36.62:8080/api/evaluations";  // URL del API Gateway en la máquina virtual
+const API_URL = "/api/evaluations";  // URL del API Gateway en la máquina virtual
 
 // Obtener todas las evaluaciones
 const getEvaluations = async () => {

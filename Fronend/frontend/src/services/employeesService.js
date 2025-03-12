@@ -1,5 +1,5 @@
 // EmployeesService.js
-const API_URL = "http://172.190.36.62:8080/employees"; // URL del API Gateway en la máquina virtual
+const API_URL = "http://172.190.36.62/api/employees"; // URL del API Gateway en la máquina virtual
 
 // Función para obtener el token correctamente
 const getToken = () => {
